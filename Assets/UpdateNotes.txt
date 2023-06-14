@@ -1,0 +1,6 @@
+0.0.1 	Added:
+	- New font
+	- Parallax effect for background "Side"-gameplay
+	- Animations for UI
+	Fixed:
+	- Fixes for UI buttons and Input System

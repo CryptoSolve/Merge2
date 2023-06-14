@@ -163,28 +163,10 @@ public class MergeableItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     private void OnSuccess(MergeableItem firstItem, MergeableItem secondItem)
     {
         Deactivate();
-        var firstItemTransform = firstItem.transform;
-        var secondItemTransform = secondItem.transform;
 
-        DOTween.Sequence()
-            .Append(secondItemTransform.DOScale(1.5f, 0.3f).SetEase(Ease.OutQuad))
-            /*
-             * //Shake Animation
-            .Append(SecondItem.transform.DORotate(Vector3.forward * 20, 0.04f))
-            .Append(SecondItem.transform.DORotate(Vector3.forward * -20, 0.08f))
-            .Append(SecondItem.transform.DORotate(Vector3.forward * 20, 0.08f))
-            .Append(SecondItem.transform.DORotate(Vector3.forward * -20, 0.08f))
-            .Append(SecondItem.transform.DORotate(Vector3.forward * 20, 0.08f))
-            .Append(SecondItem.transform.DORotate(Vector3.forward * 0, 0.04f
-            */
-            .Append(secondItemTransform.DOScale(1f, 0.2f).SetEase(Ease.InQuad));
+        AnimationTweakScale(secondItem.transform);
 
-        DOTween.Sequence()
-            .Append(firstItemTransform.DOScale(0, 0.2f))
-            .Append(firstItemTransform.DOMove(ChestPosition, 0f))
-            .Append(firstItemTransform.DOScale(1, 0.3f));
-
-        firstItemTransform.DOMove(homePosition, 0.6f).SetDelay(0.4f);
+        AnimationDisappearAndReturnBack(firstItem.transform, ChestPosition, homePosition);
 
         Invoke(nameof(Activate), 0.9f);
     }
@@ -213,5 +195,32 @@ public class MergeableItem : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
             transform.position = Input.mousePosition;
             yield return wait;
         }
+    }
+
+    private void AnimationTweakScale(Transform itemTransform)
+    {
+        DOTween.Sequence()
+            .Append(itemTransform.DOScale(1.5f, 0.3f).SetEase(Ease.OutQuad))
+            /*
+             * //Shake Animation
+            .Append(SecondItem.transform.DORotate(Vector3.forward * 20, 0.04f))
+            .Append(SecondItem.transform.DORotate(Vector3.forward * -20, 0.08f))
+            .Append(SecondItem.transform.DORotate(Vector3.forward * 20, 0.08f))
+            .Append(SecondItem.transform.DORotate(Vector3.forward * -20, 0.08f))
+            .Append(SecondItem.transform.DORotate(Vector3.forward * 20, 0.08f))
+            .Append(SecondItem.transform.DORotate(Vector3.forward * 0, 0.04f
+            */
+            .Append(itemTransform.DOScale(1f, 0.2f).SetEase(Ease.InQuad));
+    }
+
+    private void AnimationDisappearAndReturnBack(Transform itemTransform, Vector2 from, Vector2 to)
+    {
+        itemTransform.SetParent(canvas.transform);
+        DOTween.Sequence()
+            .Append(itemTransform.DOScale(0, 0.2f))
+            .Append(itemTransform.DOMove(from, 0f))
+            .Append(itemTransform.DOScale(1, 0.3f));
+
+        itemTransform.DOMove(to, 0.6f).SetDelay(0.4f);
     }
 }

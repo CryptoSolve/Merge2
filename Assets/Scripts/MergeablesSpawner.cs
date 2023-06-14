@@ -32,6 +32,7 @@ public class MergeablesSpawner : MonoBehaviour
     private void Start()
     {
         var firstLevelItems = FillItemTypes();
+        var chestPosition = ItemsParent.InverseTransformVector(ChestTransform.position);
 
         var canvas = GetComponent<Canvas>();
         for (int i = 0; i < Count; i++)
@@ -41,7 +42,8 @@ public class MergeablesSpawner : MonoBehaviour
 
             MergeableItemData data = ItemsRepository.Mergeables[GetRandomItemType(firstLevelItems)];
 
-            item.Init(ItemsParent, canvas, _camera, incrementScore, ChestTransform.position, data);
+
+            item.Init(ItemsParent, canvas, _camera, incrementScore, chestPosition, data);
             item.OnSuccessfullMerge += (oldItem, upgradedItem) => oldItem.SetData(ItemsRepository.Mergeables[GetRandomItemType(firstLevelItems)]);
 
             spawnedItems.Add(item);

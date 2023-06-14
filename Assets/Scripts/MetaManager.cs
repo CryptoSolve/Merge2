@@ -16,7 +16,7 @@ public class MetaManager : MonoBehaviour
     private IInteractable interactable;
     private int hoverableMask;
     private int interactableMask;
-    private bool isClicking;
+    private bool isInTransitionToCore;
 
     private void Awake()
     {
@@ -35,7 +35,7 @@ public class MetaManager : MonoBehaviour
 
     private void Update()
     {
-        if (isClicking)
+        if (isInTransitionToCore)
             return;
         if (FindItem(out IHoverable newHoverable, interactableMask))
         {
@@ -78,15 +78,14 @@ public class MetaManager : MonoBehaviour
 
     private void PlayerInput_onActionTriggered(InputAction.CallbackContext ctx)
     {
-        Debug.Log("Phase " + ctx.action.phase);
         if (ctx.action.phase == InputActionPhase.Started)
         {
-            isClicking = true;
         }
         else if (ctx.action.phase == InputActionPhase.Canceled)
         {
             if (FindItem(out interactable, interactableMask))
             {
+                isInTransitionToCore = true;
                 interactable.Interact();
             }
         } 
